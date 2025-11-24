@@ -104,7 +104,7 @@ async def say(interaction: discord.Interaction, message: str):
 async def on_ready():
     print(f"Logged in as {bot.user}!")
     print("Auto-starting Minecraft server...")
-    subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
+    # subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
 
     try:
         synced = await bot.tree.sync()
@@ -113,7 +113,9 @@ async def on_ready():
         print(f"Error syncing commands: {e}")
 
 ##################################################################################################################
-bot.run('/home/noahs/Documents/DiscToServerBot/server1/DiscToServerBot/token.py')
+with open("/home/noahs/Documents/DiscToServerBot/server1/DiscToServerBot/token.txt", "r") as f:
+    TOKEN = f.read().strip()
+bot.run(TOKEN)
 ##################################################################################################################
 
 '''
