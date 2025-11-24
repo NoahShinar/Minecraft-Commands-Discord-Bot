@@ -11,47 +11,8 @@ import aiohttp
 from typing import Optional, Literal
 import shutil
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
-import binascii
-
 ##################################################################################################################
-# Bot Token Encryption
-##################################################################################################################
-# GENERATE NEW ENCRYPTED TOKEN
-# COPY AND RUN IN NEW PYTHON FILE
-'''
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
-from Crypto.Random import get_random_bytes
-
-import binascii
-key = b"this_is_a_16byte"  # 16 bytes for AES-128
-bot_token = "YOUR_BOT_TOKEN_HERE" # PUT TOKEN IN HERE
-iv = get_random_bytes(16)
-cipher = AES.new(key, AES.MODE_CBC, iv)
-ciphertext = cipher.encrypt(pad(bot_token.encode(), AES.block_size))
-encrypted_hex = (iv + ciphertext).hex()
-print("Encrypted token (hex):", encrypted_hex)
-'''
-
-# ---------------------
-# DECRYPTION
-key = b"this_is_a_16byte"
-# COPY ENCRYPTED KEY BELOW \/
-encrypted_hex = "bd10246c1119a98df3e227b4e191e2cbd68b0fee07e662242049197364762bc08cf82de46e4dcbe2ded93faf721d8301451fe10fc6e6aacf7404120ce45a1f65e210c1da1ed499fa47baef7044f14f64ba0aa162618e093812d024d98519ea39"
-encrypted_bytes = binascii.unhexlify(encrypted_hex)
-iv = encrypted_bytes[:16]
-ciphertext = encrypted_bytes[16:]
-cipher = AES.new(key, AES.MODE_CBC, iv)
-decrypted_token = unpad(cipher.decrypt(ciphertext), AES.block_size).decode()
-
-##################################################################################################################
-# Bot Token Encryption
-##################################################################################################################
-
-##################################################################################################################
-# Discord Bot
+# Bot Code
 ##################################################################################################################
 
 OWNER_ID = 695638501714165831
@@ -150,26 +111,9 @@ async def on_ready():
         print(f"Synced {len(synced)} commands globally.")
     except Exception as e:
         print(f"Error syncing commands: {e}")
-'''
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}!")
-    subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
-
-    try:
-        guild = discord.Object(id=GUILD_ID)
-        synced = await bot.tree.sync(guild=guild)
-        print(f"Synced {len(synced)} commands globally.")
-    except Exception as e:
-        print(f"Error syncing commands: {e}")
-'''
-
 
 ##################################################################################################################
-bot.run(decrypted_token)
-##################################################################################################################
-##################################################################################################################
-# Discord Bot
+bot.run('/home/noahs/Documents/DiscToServerBot/server1/DiscToServerBot/token.py')
 ##################################################################################################################
 
 '''
