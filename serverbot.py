@@ -51,8 +51,6 @@ async def get_uuid(username: str):
 
 def send_to_server(cmd: str):
     subprocess.run(["mcrcon", "-H", "127.0.0.1", "-P", "25575", "-p", "4630", f"{cmd}"])
-def say_to_server(msg: str):
-    subprocess.run(["mcrcon", "-H", "127.0.0.1", "-P", "25575", "-p", "4630", f"say {msg}"])
 
 # WHITELIST ADD COMMAND
 @bot.tree.command(name="whitelist", description="Add a Minecraft username to the whitelist")
