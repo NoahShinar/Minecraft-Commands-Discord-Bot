@@ -15,8 +15,8 @@ import shutil
 # Bot Code
 ##################################################################################################################
 
-OWNER_ID = 695638501714165831
-ANDREW_ID = 382977492383825954
+OWNER_ROLE_ID = 1437183305266106558
+ADMIN_ROLE_ID = 1437182763093463101
 GUILD_ID = 1437180858367868950
 
 intents = discord.Intents.all()
@@ -58,7 +58,8 @@ def say_to_server(msg: str):
 @bot.tree.command(name="whitelist", description="Add a Minecraft username to the whitelist")
 @app_commands.describe(username="Whitelist username")
 async def whitelist(interaction: discord.Interaction, username: str):
-    if interaction.user.id not in (OWNER_ID, ANDREW_ID):
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids and ADMIN_ROLE_ID not in user_role_ids:
         return await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
 
     # Check if username exists on Mojang
@@ -77,7 +78,8 @@ async def whitelist(interaction: discord.Interaction, username: str):
 # START SERVER COMMAND
 @bot.tree.command(name="start", description="Start the Minecraft server")
 async def start(interaction: discord.Interaction):
-    if interaction.user.id != OWNER_ID:
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids:
         await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
         return
 
@@ -90,7 +92,8 @@ async def start(interaction: discord.Interaction):
 @bot.tree.command(name="say", description="/say command to say stuff as server cause it funi")
 @app_commands.describe(message="Text to send to server")
 async def say(interaction: discord.Interaction, message: str):
-    if interaction.user.id != OWNER_ID:
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids:
         await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
         return
 
