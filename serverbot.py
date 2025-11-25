@@ -15,17 +15,17 @@ import shutil
 # Bot Code
 ##################################################################################################################
 
-OWNER_ROLE_ID = 1437183305266106558
-ADMIN_ROLE_ID = 1437182763093463101
-GUILD_ID = 1437180858367868950
+OWNER_ROLE_ID = 1437183305266106558 # Change to role ID assigned to owner
+ADMIN_ROLE_ID = 1437182763093463101 # Change to role ID assigned to admins
+GUILD_ID = 1437180858367868950 # Change to your discord server's ID
+WHITELIST_FILE = "/home/noahshinar/minecraft_servers/server1/whitelist.json" # Change path to your own whitelist file
+TOKEN_FILE = "/home/noahshinar/Documents/DiscToServer/token.txt" # Change path to your own bot token file
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 print("Loaded commands at startup:", bot.tree.get_commands())
 
-WHITELIST_FILE = "/home/noahshinar/minecraft_servers/server1/whitelist.json"
-
-# HELPER FUNCTIONS
+# PRE-CONDITIONS
 def is_whitelisted(username: str):
     if not os.path.exists(WHITELIST_FILE):
         return False
@@ -116,7 +116,7 @@ async def on_ready():
 ##################################################################################################################
 # BOT TOKEN
 ##################################################################################################################
-with open("/home/noahshinar/Documents/DiscToServer/token.txt", "r") as f:
+with open(TOKEN_FILE, "r") as f:
     TOKEN = f.read().strip()
 bot.run(TOKEN)
 ##################################################################################################################
