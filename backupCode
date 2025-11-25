@@ -69,13 +69,27 @@ async def get_uuid(username: str):
 def send_to_server(cmd: str):
     subprocess.run(["mcrcon", "-H", "127.0.0.1", "-P", "25575", "-p", "4630", f"{cmd}"])
 
+async def check_for_owner_role(interaction: discord.Interaction):
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids:
+        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
+        return
+
+async def check_for_owner_and_admin_roles(interaction: discord.Interaction):
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids and ADMIN_ROLE_ID not in user_role_ids:
+        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
+        return
+
+##################################################################################################################
+# SLASH COMMANDS
+##################################################################################################################
 # WHITELIST ADD COMMAND
 @bot.tree.command(name="whitelist", description="Add a Minecraft username to the whitelist")
 @app_commands.describe(username="Whitelist username")
 async def whitelist(interaction: discord.Interaction, username: str):
-    user_role_ids = [role.id for role in interaction.user.roles]
-    if OWNER_ROLE_ID not in user_role_ids and ADMIN_ROLE_ID not in user_role_ids:
-        return await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
+    check_for_owner_and_admin_roles()
+    # check_for_owner_role()
 
     uuid = await get_uuid(username)
     if uuid is None:
@@ -90,10 +104,8 @@ async def whitelist(interaction: discord.Interaction, username: str):
 # START SERVER COMMAND
 @bot.tree.command(name="start", description="Start the Minecraft server")
 async def start(interaction: discord.Interaction):
-    user_role_ids = [role.id for role in interaction.user.roles]
-    if OWNER_ROLE_ID not in user_role_ids:
-        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
-        return
+    # check_for_owner_and_admin_roles()
+    check_for_owner_role()
 
     await interaction.response.defer(ephemeral=True)
     await interaction.followup.send("Starting server...", ephemeral=True)
@@ -103,10 +115,8 @@ async def start(interaction: discord.Interaction):
 @bot.tree.command(name="say", description="/say command to say stuff as server cause it funi")
 @app_commands.describe(message="Text to send to server")
 async def say(interaction: discord.Interaction, message: str):
-    user_role_ids = [role.id for role in interaction.user.roles]
-    if OWNER_ROLE_ID not in user_role_ids:
-        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
-        return
+    # check_for_owner_and_admin_roles()
+    check_for_owner_role()
 
     await interaction.response.defer(ephemeral=True)
     send_to_server(f"say {message}")
@@ -115,10 +125,8 @@ async def say(interaction: discord.Interaction, message: str):
 # RESTART COMMAND
 @bot.tree.command(name="restart", description="restarts the server")
 async def restart(interaction: discord.Integration):
-    user_role_ids = [role.id for role in interaction.user.roles]
-    if OWNER_ROLE_ID not in user_role_ids:
-        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
-        return
+    # check_for_owner_and_admin_roles()
+    check_for_owner_role()
     
     await interaction.response.defer(ephemeral=True)
     send_to_server(f"stop")
