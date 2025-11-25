@@ -116,7 +116,7 @@ async def on_ready():
 ##################################################################################################################
 # BOT TOKEN
 ##################################################################################################################
-with open("/home/noahs/Documents/DiscToServerBot/server1/DiscToServerBot/token.txt", "r") as f:
+with open("/home/noahshinar/Documents/DiscToServer/token.txt", "r") as f:
     TOKEN = f.read().strip()
 bot.run(TOKEN)
 ##################################################################################################################
