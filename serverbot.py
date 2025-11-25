@@ -130,7 +130,6 @@ async def restart(interaction: discord.Integration):
 ##################################################################################################################
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user}!")
     print("Auto-starting Minecraft server...")
     # subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
 

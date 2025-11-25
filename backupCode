@@ -28,7 +28,7 @@ GUILD_ID = 1437180858367868950
 WHITELIST_FILE = "/home/noahshinar/minecraft_servers/server1/whitelist.json"
 #
 # Change path to your own bot token file
-TOKEN_FILE = "/home/noahshinar/Documents/DiscToServer/token.txt" 
+TOKEN_FILE = "/home/noahs/Documents/DiscToServerBot/server1/DiscToServerBot/token.txt" 
 #
 #
 
@@ -99,7 +99,6 @@ async def start(interaction: discord.Interaction):
     await interaction.followup.send("Starting server...", ephemeral=True)
     subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
 
-
 # SAY COMMAND
 @bot.tree.command(name="say", description="/say command to say stuff as server cause it funi")
 @app_commands.describe(message="Text to send to server")
@@ -113,12 +112,24 @@ async def say(interaction: discord.Interaction, message: str):
     send_to_server(f"say {message}")
     await interaction.followup.send(f"Sent to server: `{message}`", ephemeral=True)
 
+# RESTART COMMAND
+@bot.tree.command(name="restart", description="restarts the server")
+async def restart(interaction: discord.Integration):
+    user_role_ids = [role.id for role in interaction.user.roles]
+    if OWNER_ROLE_ID not in user_role_ids:
+        await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
+        return
+    
+    await interaction.response.defer(ephemeral=True)
+    send_to_server(f"stop")
+    await interaction.followup.send("Starting server...", ephemeral=True)
+    subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
+
 ##################################################################################################################
 # STARTUP EVENTS
 ##################################################################################################################
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user}!")
     print("Auto-starting Minecraft server...")
     # subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
 
