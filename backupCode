@@ -113,8 +113,9 @@ async def say(interaction: discord.Interaction, message: str):
     send_to_server(f"say {message}")
     await interaction.followup.send(f"Sent to server: `{message}`", ephemeral=True)
 
-
+##################################################################################################################
 # STARTUP EVENTS
+##################################################################################################################
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}!")
