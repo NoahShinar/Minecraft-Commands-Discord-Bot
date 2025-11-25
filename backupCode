@@ -14,16 +14,33 @@ import shutil
 ##################################################################################################################
 # Bot Code
 ##################################################################################################################
+#
+# Change to role ID assigned to owner
+OWNER_ROLE_ID = 1437183305266106558 
+#
+# Change to role ID assigned to admins
+ADMIN_ROLE_ID = 1437182763093463101 
+#
+# Change to your discord server's ID
+GUILD_ID = 1437180858367868950 
+#
+# Change path to your own whitelist file
+WHITELIST_FILE = "/home/noahshinar/minecraft_servers/server1/whitelist.json"
+#
+# Change path to your own bot token file
+TOKEN_FILE = "/home/noahshinar/Documents/DiscToServer/token.txt" 
+#
+#
 
-OWNER_ROLE_ID = 1437183305266106558 # Change to role ID assigned to owner
-ADMIN_ROLE_ID = 1437182763093463101 # Change to role ID assigned to admins
-GUILD_ID = 1437180858367868950 # Change to your discord server's ID
-WHITELIST_FILE = "/home/noahshinar/minecraft_servers/server1/whitelist.json" # Change path to your own whitelist file
-TOKEN_FILE = "/home/noahshinar/Documents/DiscToServer/token.txt" # Change path to your own bot token file
-
+#
+#--DO NOT CHANGE BOT WILL BREAK--#
+#
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 print("Loaded commands at startup:", bot.tree.get_commands())
+#
+#--DO NOT CHANGE BOT WILL BREAK--#
+#
 
 # PRE-CONDITIONS
 def is_whitelisted(username: str):
@@ -46,7 +63,7 @@ async def get_uuid(username: str):
         async with session.get(url) as resp:
             if resp.status == 200:
                 data = await resp.json()
-                return data.get("id")  # Mojang UUID
+                return data.get("id") 
             return None
 
 def send_to_server(cmd: str):
@@ -60,16 +77,13 @@ async def whitelist(interaction: discord.Interaction, username: str):
     if OWNER_ROLE_ID not in user_role_ids and ADMIN_ROLE_ID not in user_role_ids:
         return await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
 
-    # Check if username exists on Mojang
     uuid = await get_uuid(username)
     if uuid is None:
         return await interaction.response.send_message(f"Couldn't find a profile with the name: **{username}**", ephemeral=True)
 
-    # Check if username is already whitelisted
     if is_whitelisted(username):
         return await interaction.response.send_message(f"**{username}** is already whitelisted.", ephemeral=True)
 
-    # Send add command to Minecraft server
     send_to_server(f"whitelist add {username}")
     await interaction.response.send_message(f"Added **{username}** to the whitelist.")
 
