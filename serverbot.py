@@ -143,7 +143,6 @@ async def restart(interaction: discord.Integration):
 async def statusChannel(interaction: discord.Integration):
     # is_owner_and_admin()
     is_owner()
-
     
 
 
