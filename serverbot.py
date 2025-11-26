@@ -10,6 +10,7 @@ import time
 import aiohttp
 from typing import Optional, Literal
 import shutil
+import time
 
 ##################################################################################################################
 # Bot Code
@@ -42,7 +43,9 @@ print("Loaded commands at startup:", bot.tree.get_commands())
 #--DO NOT CHANGE BOT WILL BREAK--#
 #
 
+##################################################################################################################
 # PRE-CONDITIONS
+##################################################################################################################
 def is_whitelisted(username: str):
     if not os.path.exists(WHITELIST_FILE):
         return False
@@ -69,13 +72,13 @@ async def get_uuid(username: str):
 def send_to_server(cmd: str):
     subprocess.run(["mcrcon", "-H", "127.0.0.1", "-P", "25575", "-p", "4630", f"{cmd}"])
 
-async def check_for_owner_role(interaction: discord.Interaction):
+async def is_owner(interaction: discord.Interaction):
     user_role_ids = [role.id for role in interaction.user.roles]
     if OWNER_ROLE_ID not in user_role_ids:
         await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
         return
 
-async def check_for_owner_and_admin_roles(interaction: discord.Interaction):
+async def is_owner_and_admin(interaction: discord.Interaction):
     user_role_ids = [role.id for role in interaction.user.roles]
     if OWNER_ROLE_ID not in user_role_ids and ADMIN_ROLE_ID not in user_role_ids:
         await interaction.response.send_message("You are not allowed to use this command.", ephemeral=True)
@@ -88,8 +91,8 @@ async def check_for_owner_and_admin_roles(interaction: discord.Interaction):
 @bot.tree.command(name="whitelist", description="Add a Minecraft username to the whitelist")
 @app_commands.describe(username="Whitelist username")
 async def whitelist(interaction: discord.Interaction, username: str):
-    check_for_owner_and_admin_roles()
-    # check_for_owner_role()
+    is_owner_and_admin()
+    # is_owner()
 
     uuid = await get_uuid(username)
     if uuid is None:
@@ -104,8 +107,8 @@ async def whitelist(interaction: discord.Interaction, username: str):
 # START SERVER COMMAND
 @bot.tree.command(name="start", description="Start the Minecraft server")
 async def start(interaction: discord.Interaction):
-    # check_for_owner_and_admin_roles()
-    check_for_owner_role()
+    # is_owner_and_admin()
+    is_owner()
 
     await interaction.response.defer(ephemeral=True)
     await interaction.followup.send("Starting server...", ephemeral=True)
@@ -115,8 +118,8 @@ async def start(interaction: discord.Interaction):
 @bot.tree.command(name="say", description="/say command to say stuff as server cause it funi")
 @app_commands.describe(message="Text to send to server")
 async def say(interaction: discord.Interaction, message: str):
-    # check_for_owner_and_admin_roles()
-    check_for_owner_role()
+    # is_owner_and_admin()
+    is_owner()
 
     await interaction.response.defer(ephemeral=True)
     send_to_server(f"say {message}")
@@ -125,13 +128,24 @@ async def say(interaction: discord.Interaction, message: str):
 # RESTART COMMAND
 @bot.tree.command(name="restart", description="restarts the server")
 async def restart(interaction: discord.Integration):
-    # check_for_owner_and_admin_roles()
-    check_for_owner_role()
-    
+    # is_owner_and_admin()
+    is_owner()
+
     await interaction.response.defer(ephemeral=True)
+    await interaction.followup.send("Stopping server...", ephemeral=True)
     send_to_server(f"stop")
     await interaction.followup.send("Starting server...", ephemeral=True)
     subprocess.Popen(["/bin/bash", "./start.sh"], cwd="/home/noahshinar/minecraft_servers/server1")
+
+# SET SERVER STATUS CHANNEL COMMAND
+@bot.tree.command(name="statusChannel", description="Changes name of custom channel to server status")
+@app_commands.describe(channelID="Input channel ID")
+async def statusChannel(interaction: discord.Integration):
+    # is_owner_and_admin()
+    is_owner()
+
+    
+
 
 ##################################################################################################################
 # STARTUP EVENTS
